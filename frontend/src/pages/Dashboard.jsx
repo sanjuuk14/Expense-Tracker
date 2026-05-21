@@ -1,19 +1,36 @@
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import useTransactionStore from '../store/transactionStore';
+import SummaryCard from '../components/SummaryCard';
+import TransactionForm from '../components/TransactionForm';
+import TransactionList from '../components/TransactionList';
+import ExpenseChart from '../components/ExpenseCharts';
 
 function Dashboard() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
+  const { transactions } = useTransactionStore();
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
+  const totalIncome = transactions
+    .filter((item) => item.type === 'income')
+    .reduce((sum, item) => sum + item.amount, 0);
+
+  const totalExpense = transactions
+    .filter((item) => item.type === 'expense')
+    .reduce((sum, item) => sum + item.amount, 0);
+
+  const balance = totalIncome - totalExpense;
+
   return (
     <div className="min-h-screen bg-slate-100 p-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-md p-6 flex justify-between items-center">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="bg-white rounded-2xl shadow-md p-6 flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-800">
               Welcome, {user?.name}
@@ -28,6 +45,25 @@ function Dashboard() {
             Logout
           </button>
         </div>
+
+        {/* Summary Cards */}
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <SummaryCard
+            title="Income"
+            amount={totalIncome}
+            color="text-green-600"
+          />
+          <SummaryCard
+            title="Expense"
+            amount={totalExpense}
+            color="text-red-600"
+          />
+          <SummaryCard title="Balance" amount={balance} color="text-blue-500" />
+        </div>
+        <ExpenseChart />
+        <TransactionForm />
+        {/* Transactions */}
+        <TransactionList />
       </div>
     </div>
   );
