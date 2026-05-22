@@ -5,6 +5,8 @@ import SummaryCard from '../components/SummaryCard';
 import TransactionForm from '../components/TransactionForm';
 import TransactionList from '../components/TransactionList';
 import ExpenseChart from '../components/ExpenseCharts';
+import CategoryManager from '../components/CategoryManager';
+import CategoryExpenseSummary from '../components/CategoryExpenseSummary';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -60,7 +62,12 @@ function Dashboard() {
           />
           <SummaryCard title="Balance" amount={balance} color="text-blue-500" />
         </div>
-        <ExpenseChart />
+        {/* Main Content */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <ExpenseChart />
+          <CategoryExpenseSummary />
+        </div>
+        <CategoryManager />
         <TransactionForm />
         {/* Transactions */}
         <TransactionList />

@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import useTransactionStore from '../store/transactionStore';
+import useCategoryStore from '../store/categoryStore';
 
 function TransactionForm() {
   const { addTransaction } = useTransactionStore();
+  const { categories } = useCategoryStore();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -69,15 +71,20 @@ function TransactionForm() {
           <option value="income">Income</option>
         </select>
 
-        <input
-          type="text"
+        <select
           name="category"
-          placeholder="Category"
           value={formData.category}
           onChange={handleChange}
           className="border p-3 rounded-xl"
-        />
+        >
+          <option value="">Select Category</option>
 
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
         <input
           type="date"
           name="date"
